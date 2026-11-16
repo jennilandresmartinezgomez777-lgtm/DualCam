@@ -7,6 +7,9 @@ on:
     branches: [ main ]
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build-ipa:
     name: Build DualCam.ipa
@@ -45,3 +48,16 @@ jobs:
           name: DualCam-ipa
           path: build/DualCam.ipa
           retention-days: 30
+
+      - name: Publish DualCam.ipa to GitHub Release
+        if: github.ref == 'refs/heads/main'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh release view v1.0.0 >/dev/null 2>&1; then
+            gh release upload v1.0.0 build/DualCam.ipa --clobber
+          else
+            gh release create v1.0.0 build/DualCam.ipa \
+              --title "DualCam v1.0.0" \
+              --notes "Native iOS DualCam app (AVCaptureMultiCamSession). Unsigned .ipa ready for sideloading via AltStore, SideStore, or Sideloadly."
+          fi
