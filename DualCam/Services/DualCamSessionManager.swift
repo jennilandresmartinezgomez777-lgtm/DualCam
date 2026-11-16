@@ -337,7 +337,7 @@ final class DualCamSessionManager: NSObject, ObservableObject {
         backVideoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
         if session.canAddOutput(backVideoOutput) {
             session.addOutputWithNoConnections(backVideoOutput)
-            let backOutputConnection = AVCaptureConnection(inputPort: backVideoPort, videoDataOutput: backVideoOutput)
+            let backOutputConnection = AVCaptureConnection(inputPorts: [backVideoPort], output: backVideoOutput)
             if backOutputConnection.isVideoOrientationSupported {
                 backOutputConnection.videoOrientation = .portrait
             }
@@ -351,7 +351,7 @@ final class DualCamSessionManager: NSObject, ObservableObject {
         frontVideoOutput.setSampleBufferDelegate(self, queue: dataOutputQueue)
         if session.canAddOutput(frontVideoOutput) {
             session.addOutputWithNoConnections(frontVideoOutput)
-            let frontOutputConnection = AVCaptureConnection(inputPort: frontVideoPort, videoDataOutput: frontVideoOutput)
+            let frontOutputConnection = AVCaptureConnection(inputPorts: [frontVideoPort], output: frontVideoOutput)
             if frontOutputConnection.isVideoOrientationSupported {
                 frontOutputConnection.videoOrientation = .portrait
             }
